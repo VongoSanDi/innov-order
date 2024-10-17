@@ -1,0 +1,30 @@
+# version: '3.8'
+
+services:
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: nestjs_api
+  #   restart: always
+  #   ports:
+  #     - '3000:3000' # Expose le port 3000 pour l'API
+  #   depends_on:
+  #     - mongodb
+  #   environment:
+  #     - MONGODB_URI=mongodb://mongodb:27017/innovorder
+  #   volumes:
+  #     - .:/usr/src/app
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:5.0
+    restart: always
+    ports:
+      - '27017:27017' # Expose le port 27017 pour MongoDB
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
+    driver: local
