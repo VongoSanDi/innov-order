@@ -2,14 +2,14 @@ import {
   CreateUserDto,
   UpdateUserDto,
   UserResponseDto,
-} from '@/users/dto/user.dto';
-import { User } from '@/users/schemas/users.schema';
+} from '../users/dto/user.dto';
+import { User } from '../interfaces/user.interface';
 
 export class UserMapper {
   static toEntity(createUserDto: CreateUserDto): Partial<User> {
-    const user = new User();
-    user.login = createUserDto.login;
-    return user;
+    return {
+      login: createUserDto.login,
+    };
   }
 
   static toResponseDto(user: User): UserResponseDto {

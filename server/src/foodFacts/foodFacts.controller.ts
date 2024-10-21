@@ -4,12 +4,11 @@ import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 
 @Controller('food-facts')
 export class FoodFactsController {
-  constructor(private readonly foodFactsService: FoodFactsService) { }
+  constructor(private readonly foodFactsService: FoodFactsService) {}
 
   @Get(':barcode')
   @UseGuards(JwtAuthGuard)
   async getFoodFacts(@Param('barcode') barcode: string) {
-    console.log('barcode', barcode);
     return this.foodFactsService.getFact(barcode);
   }
 }

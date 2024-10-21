@@ -1,59 +1,45 @@
+import { User } from '../interfaces/user.interface';
 import {
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
-import { User } from '@/users/schemas/users.schema';
 import {
   CreateUserDto,
+  LoginResponseDto,
   UpdateUserDto,
   UserResponseDto,
   UserUpdateResponseDto,
-} from '@/users/dto/user.dto';
-import { JwtService } from '@nestjs/jwt';
-import { LoginResponseDto } from '@/users/dto/user.dto';
-import { UserMapper } from '@/mappers/user.mapper';
-import { compareDataToHash, encrypt } from '@/utils/bcrypt';
+} from './dto/user.dto';
+import { UserMapper } from '../mappers/user.mapper';
+import { compareDataToHash, encrypt } from '../utils/bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>,
+    @Inject('USER_MODEL') private userModel: Model<User>,
     private jwtService: JwtService,
   ) {}
 
-  /**
-   * Create user method
-   */
-  async createUser(createUserDto: CreateUserDto): Promise<UserResponseDto> {
+  async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     const userEntity = UserMapper.toEntity(createUserDto);
     userEntity.password = await encrypt(createUserDto.password);
-    const createdUser = new this.userModel(userEntity);
-    await createdUser.save();
+    const createdUser = await this.userModel.create(userEntity);
     return UserMapper.toResponseDto(createdUser);
   }
 
-  async findUserByLogin(login: string): Promise<User> {
+  async findByLogin(login: string): Promise<User> {
     const user = await this.userModel.findOne({ login }).exec();
-
     if (!user) {
       throw new NotFoundException(`User with login ${login} can't be found`);
     }
     return user;
   }
 
-  async findAllUsers(): Promise<User[]> {
-    try {
-      const result = await this.userModel.find().exec();
-      return result;
-    } catch (error) {
-      throw new Error('failed at findAllUsers');
-    }
-  }
-
-  async updateUser(
+  async update(
     login: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UserUpdateResponseDto> {
@@ -68,25 +54,29 @@ export class UsersService {
     );
 
     if (!isPasswordMatching) {
-      throw new UnauthorizedException('Current passwors is incorrect');
+      throw new UnauthorizedException('Current password is incorrect');
     }
 
     const updateData: any = {};
     if (updateUserDto.newPassword)
       updateData.password = await encrypt(updateUserDto.newPassword);
 
-    const updatedUser = await this.userModel
-      .findOneAndUpdate({ login }, { $set: updateData }, { new: true })
-      .exec();
+    const updatedUser = await this.userModel.findOneAndUpdate(
+      { login },
+      { $set: updateData },
+      { new: true },
+    );
+
     if (!updatedUser) {
       throw new NotFoundException('Failed to update user');
     }
-    return updatedUser;
+
+    return { login: updatedUser.login };
   }
 
   // Valide que le login de l'utilisateur donnés par le client sont bien les mêmes que ceux de la db
   async validateUser(login: string, password: string): Promise<User> {
-    const user = await this.findUserByLogin(login);
+    const user = await this.findByLogin(login);
     const isPasswordMatching = await compareDataToHash(password, user.password);
     if (!isPasswordMatching) {
       throw new UnauthorizedException('Invalid credentials');

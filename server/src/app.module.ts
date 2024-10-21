@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserModule } from '@/users/users.module';
 import { AuthModule } from '@/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { FoodFactsModule } from './foodFacts/foodFacts.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -13,11 +13,11 @@ import { FoodFactsModule } from './foodFacts/foodFacts.module';
       isGlobal: true,
     }),
     MongooseModule.forRoot('mongodb://localhost:27017/Users'),
-    UserModule,
+    UsersModule,
     AuthModule,
     FoodFactsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

@@ -14,14 +14,9 @@ export class UpdateUserDto {
   newPassword?: string;
 }
 
-export class BasicUser {
-  login: string;
-  // id: string;
-}
-
 export class LoginResponseDto {
   access_token: string;
-  user: BasicUser;
+  user: UserResponseDto;
 }
 
 /**
@@ -30,7 +25,6 @@ export class LoginResponseDto {
 export class UserResponseDto {
   id: number;
   login: string;
-  access_token: string;
 }
 
 export class UserUpdateResponseDto {

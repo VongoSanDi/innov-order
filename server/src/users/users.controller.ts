@@ -1,10 +1,7 @@
-import { User } from '@/users/schemas/users.schema';
-import { UsersService } from '@/users/users.service';
 import {
   BadRequestException,
   Body,
   Controller,
-  Get,
   Param,
   Patch,
   Post,
@@ -14,14 +11,15 @@ import { ApiBody } from '@nestjs/swagger';
 import {
   CreateUserSchema,
   UpdateUserSchema,
-} from '@/users/zod/create-user-zod.schema';
+} from './zod/create-user-zod.schema';
 import {
   CreateUserDto,
   UpdateUserDto,
   UserResponseDto,
   UserUpdateResponseDto,
 } from './dto/user.dto';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
@@ -32,13 +30,12 @@ export class UsersController {
    */
   @Post()
   @ApiBody({ type: CreateUserDto })
-  async createUser(@Body() body: CreateUserDto): Promise<UserResponseDto> {
-    console.log('createUser.body', body);
+  async create(@Body() body: CreateUserDto): Promise<UserResponseDto> {
     const validateSchema = CreateUserSchema.safeParse(body);
     if (!validateSchema.success) {
       throw new BadRequestException(validateSchema.error.errors);
     }
-    return await this.userService.createUser(body);
+    return await this.userService.create(body);
   }
 
   // @Get(':login')
@@ -54,7 +51,7 @@ export class UsersController {
   //   }
   //
   //   // Récupérer l'utilisateur
-  //   const user = await this.userService.findUserByLogin(login);
+  //   const user = await this.userService.findByLogin(login);
   //   if (!user) {
   //     throw new NotFoundException(`User with login ${login} not found`);
   //   }
@@ -84,7 +81,7 @@ export class UsersController {
         validateSchema.error.errors.map((issue) => issue.message).join(', '),
       );
     }
-    const response = await this.userService.updateUser(login, updateUserDto);
+    const response = await this.userService.update(login, updateUserDto);
     return response;
   }
 }

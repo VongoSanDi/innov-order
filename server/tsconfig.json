@@ -21,7 +21,7 @@
     "strictPropertyInitialization": false,
     "paths": {
       "@/*": [
-        "./src/*"
+        "src/*"
       ]
     }
   }
