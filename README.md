@@ -7,8 +7,7 @@ Step by step guidance to install and run the API
 ## Installation
 We need NodeJs for the server & Vite the client
 
-```bash
-$ npm install
+$ npm install // In the client folder & server folder
 ```
 
 ## Database Setup
@@ -27,22 +26,22 @@ $ docker compose up --build
 
 ## Running the server
 ```html
-$ npm run start
+$ npm run start // In the server folder
 ```
 
 ## Running the client
 ```html
-$ npm run dev
+$ npm run dev // In the client folder
 ```
 ## Test
-
+Not everything is tested
 ```bash
 # unit tests
 $ npm run test
 ```
 
 ## Environment Variables
-This project requires some environment variables in order to function -
+This project requires some environment variables in order to function - you need to create a .env file at the root of the server folder
 ```dotenv
 # Endpoint of the public api
 FOODFACTS_ENDPOINT="https://world.openfoodfacts.org"
