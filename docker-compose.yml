@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 services:
   client:
     build: ./client
@@ -10,6 +10,8 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
     command: npm run dev
+    networks:
+      - app-network
 
   server:
     build: ./server
@@ -18,9 +20,14 @@ services:
     volumes:
       - ./server:/app
       - /app/node_modules
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/Users
+      - JWT_SECRET=you_secret_key
     command: npm run start
     depends_on:
       - mongodb
+    networks:
+      - app-network
 
   mongodb:
     container_name: mongodb
@@ -30,6 +37,12 @@ services:
       - '27017:27017'
     volumes:
       - mongodb_data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   mongodb_data:

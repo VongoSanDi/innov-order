@@ -3,7 +3,8 @@ import { EditProfilDto } from "@/types/api"
 export const editProfil = async (payload: any): Promise<EditProfilDto> => {
   const { username, currentPassword, newPassword } = payload
   const token = localStorage.getItem('token')
-  const response = await fetch(`http://localhost:3000/users/${username}`, {
+  const response = await fetch(`/api/users/${username}`, {
+    // const response = await fetch(`http://localhost:3000/users/${username}`, {
     method: 'PATCH',
     credentials: 'include',
     headers: {

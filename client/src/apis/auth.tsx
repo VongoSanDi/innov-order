@@ -10,7 +10,8 @@ interface AuthProvider {
 export const authProvider: AuthProvider = {
 
   async signIn(username: string, password: string) {
-    const response = await fetch("http://localhost:3000/auth/login", {
+    const response = await fetch("/api/auth/login", {
+      // const response = await fetch("http://localhost:3000/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +37,8 @@ export const authProvider: AuthProvider = {
   },
 
   async createUser(username: string, password: string): Promise<ApiResponse> {
-    const response = await fetch('http://localhost:3000/users/', {
+    const response = await fetch('/api/users/', {
+      // const response = await fetch('http://localhost:3000/users/', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",

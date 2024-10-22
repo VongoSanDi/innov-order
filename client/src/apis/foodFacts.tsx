@@ -18,7 +18,8 @@ export const getFoodFacts = async (barcode: string): Promise<FrontendProductData
   const lang = getLang()
 
   const token = localStorage.getItem('token')
-  const response = await fetch(`http://localhost:3000/food-facts/${barcode}`, {
+  const response = await fetch(`/api/food-facts/${barcode}`, {
+    // const response = await fetch(`http://localhost:3000/food-facts/${barcode}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
