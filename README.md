@@ -1,108 +1,164 @@
-## Innov-order
-Thanks to The Project Crew for the idea and the exercice
+# Innov Order Project
 
 ## Description
-Step by step guidance to install and run the API 
+Innov Order is a fullstack web application with user authentication and food data management. It is built using React/Vite for the frontend and NestJS/MongoDB for the backend.
 
-## Installation
-We need NodeJs for the server & Vite the client
+## Technologies Used
 
-$ npm install // In the client folder & server folder
+### Frontend
+- React with Vite
+- TypeScript
+- Material-UI for user interface
+- React Router for navigation
+- Context management for global state
+
+### Backend
+- NestJS
+- MongoDB with Mongoose
+- JWT for authentication
+- PassportJS
+- BCrypt for password hashing
+- Zod for the schema validation
+
+## Project Structure
+
+```
+innov-order/
+├── client/                    # React/Vite Frontend
+│   ├── src/
+│   │   ├── apis/            # API clients and services
+│   │   ├── components/      # Reusable React components
+│   │   ├── context/         # React contexts (ex: AuthContext)
+│   │   ├── hooks/           # Custom React hooks
+│   │   ├── i18n/            # Ready for internationalization
+│   │   ├── pages/           # Pages
+│   │   ├── router/          # Route setup
+│   │   └── types/           # Types
+│   ├── Dockerfile
+│   └── package.json
+│
+├── server/                    # NestJS Backend
+│   ├── src/
+│   │   ├── auth/            # Authentication module
+│   │   ├── common/          # Shared elements
+│   │   ├── foodFacts/       # Food facts module
+│   │   ├── interfaces/      # TypeScript interfaces
+│   │   ├── mappers/         # Data mappers (DTO <-> Entity)
+│   │   ├── mongo/           # MongoDB configuration and connection
+│   │   ├── users/           # User  module
+│   │   └── utils/           # Utilities and helpers
+│   ├── Dockerfile
+│   └── package.json
+│
+└── docker-compose.yml         # Docker Compose configuration
 ```
 
-## Database Setup
-I used MongoDB for the database, it runs on a container.
+## Prerequisites
 
-First log in inside, then switch to the non-existing database Users
-```html
-$ docker exec -it mongodb mongo
-$ use Users
-$ exit
-```
-Then run the container
-```html
-$ docker compose up --build
-```
+- Docker and Docker Compose
+- Node.js
+- npm or yarn
+- MongoDB (for local development without Docker)
 
-## Running the server
-```html
-$ npm run start // In the server folder
-```
+## Installation and Setup
 
-## Running the client
-```html
-$ npm run dev // In the client folder
-```
-## Test
-Not everything is tested
+### With Docker (Recommended)
+
+1. Clone the repository:
 ```bash
-# unit tests
-$ npm run test
+git clone https://github.com/VongoSanDi/innov-order.git
+cd innov-order
 ```
 
-## Environment Variables
-This project requires some environment variables in order to function - you need to create a .env file at the root of the server folder
-```dotenv
-# Endpoint of the public api
+2. Start the containers:
+```bash
+docker-compose up --build
+```
+
+The application will be accessible at:
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3000
+- Swagger: http://localhost:3000/api
+- MongoDB: mongodb://localhost:27017
+
+### Local Development (Without Docker)
+
+1. Start MongoDB locally and create Users database
+
+2. Frontend Setup:
+```bash
+cd client
+npm install
+npm run vite
+```
+
+3. Backend Setup:
+```bash
+cd server
+npm install
+npm run start:dev
+```
+
+## Configuration
+
+### Environment Variables
+
+The .env file is already created you can edit it directly or do it from the docker-compose.yml file
+
+```env
+MONGODB_URI=mongodb://mongodb:27017/Users
+JWT_SECRET=your_jwt_secret
 FOODFACTS_ENDPOINT="https://world.openfoodfacts.org"
+```
 
-# Key used to hash Jwt
-JWT_SECRET="your_secret_key"
-```
-## Routes
-This is the available routes
-- POST    `auth/login` -> login to get access to /GET food-facts:barcode and /PATCH users:login
-- POST    `users` -> add new user
-- GET     `users` -> get all Users
-- PATCH   `users/:login` -> update user by login
-- GET     `food-facts:barcode` -> get a product by barcode
+## Main Features
 
-### Auth
-```
-auth/login
-# POST
-# @Param - {login: string}
-# @Body - {login: string, password: string}
-```
+### Frontend
+- User authentication (login/register)
+- Secure routing system
+- Global state management with Context
+- Material-UI components
+- Reusable custom hooks
+
+### Backend
+- RESTful API
+- JWT authentication
+- Schema validation with Zod
+- DTO/Entity mapping
+- Secure password management
+- MongoDB with Mongoose
+
+## API Endpoints
+
+### Authentication
+- `POST /auth/login`: User login
 
 ### Users
-```
-users/:login
-# GET
-# @Param - login: string
-```
+- `PATCH /users/:login`: Update user informations
+- `POST /auth/register`: User registration
 
-```
-users/:login
-# PATCH
-# JWT-PROTECTED
-# @Param - login: string
-# @Body - (optional params) {login: string, currentPassword: string, newPassword: string}
+### FoodFacts
+[FoodFacts endpoints documentation]
 
-```
+## Testing
 
-```
-users/
-# POST
-# @Body - {login: string, password: string}
+### Backend
+```bash
+cd server
+npm run test        # Unit tests
 ```
 
+## Docker
 
-### Food-Facts
+The project uses three Docker services:
+- `client`: React/Vite application
+- `server`: NestJS API
+- `mongodb`: Database
+
+### Useful Docker Commands
+```bash
+docker-compose up --build    # Build and start all services
+docker-compose down         # Stop all services
+docker-compose logs client  # View client logs
+docker-compose logs server  # View server logs
 ```
-food-facts/:barcode
-# GET
-# JWT-PROTECTED
-# @Param - {barcode: string}
-```
-
-## Swagger
-You can access swagger once the server is launched via the url: http:/localhost:3000/api
-
-## Schema validation
-I used zod for the schema validation for more security, maybe overkill for this project but it was the first time I used it and will keep using it from now on
-Documentation: https://zod.dev
-
-## License
-
-Nest is [MIT licensed].
