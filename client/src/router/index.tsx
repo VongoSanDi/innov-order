@@ -1,4 +1,3 @@
-import HomePage from '@/pages/HomePage'
 import RegisterPage from "@/pages/RegisterPage";
 import LoginPage from "@/pages/LoginPage";
 import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
@@ -25,7 +24,7 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <HomePage />,
+            element: <Navigate to="/food-facts" replace />
           },
           {
             path: "food-facts",

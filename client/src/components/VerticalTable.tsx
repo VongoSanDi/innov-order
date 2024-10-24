@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Tooltip } from '@mui/material'
+import { Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Paper, Button, Tooltip } from '@mui/material'
 import { formatKeyName } from '@/i18n/translations';
 import { VerticalTableProps } from '@/types/index';
 
@@ -11,6 +11,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     '&:last-child': {
       paddingRight: 4,
     },
+  },
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
   },
   maxWidth: '200px',
   overflow: 'hidden',

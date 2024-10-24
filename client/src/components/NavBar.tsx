@@ -8,11 +8,10 @@ const NavBar: React.FC = () => {
   return (
     <>
       <nav className="navbar">
-        <Button component={Link} to="/">Home</Button>
         {(isAuthenticated && location.pathname === "/") && <Button component={Link} to="/food-facts">Search</Button>}
-        {isAuthenticated ? (
+        {isAuthenticated && (
           <Button component={Link} to="/logout">Logout
-          </Button>) : (<Button component={Link} to="/login">Login</Button>)}
+          </Button>)}
         {!isAuthenticated && <Button component={Link} to="/register">Register</Button>}
         {isAuthenticated && <Button component={Link} to="/profil">Edit Profil</Button>}
       </nav>
